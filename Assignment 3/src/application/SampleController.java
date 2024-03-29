@@ -15,6 +15,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
@@ -118,6 +119,9 @@ public class SampleController implements Initializable{
     @FXML
     private RadioButton searchTypeButton;
     
+    @FXML
+    private ComboBox<String> categoryComboBox = new ComboBox<>();
+    
 
     @FXML
     void buyToy(ActionEvent event) throws IOException {
@@ -217,6 +221,9 @@ public class SampleController implements Initializable{
             for (Toy toy : toys) {
                 listToys.getItems().addAll(toy.toString());
             }
+            
+            categoryComboBox.setEditable(false);
+            categoryComboBox.getItems().addAll("Animal", "Puzzle", "Figure", "Boardgame");
          
 	}
 	
