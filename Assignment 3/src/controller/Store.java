@@ -28,7 +28,7 @@ public class Store {
     	toys = new ArrayList<>();
     	appMenu = new AppMenu();
 		loadToys();
-		launchApplication();
+		//launchApplication();
     }
     /**
  	Store constructor creating new instance of store while feeding it the inventory of old instance of Store.
@@ -301,8 +301,9 @@ public class Store {
 	}
 	/**
  	Reads data from text file and loads information as Toy objects into toys ArrayList
+	 * @return 
      */
-	private void loadToys() throws Exception {
+	public ArrayList<Toy> loadToys() throws Exception {
 	    File db = new File(FILE_PATH);
 	    
 	    if (db.exists()) {
@@ -343,6 +344,7 @@ public class Store {
 	        }
 	        fileReader.close();
 	    }
+	    return toys;
 	}
 	/**
  	Saves the stores inventory data to a text file by printing the formated  Toy objects to it.

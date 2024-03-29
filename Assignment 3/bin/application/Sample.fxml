@@ -11,36 +11,36 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 
-
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21" fx:controller="application.SampleController">
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.SampleController">
    <center>
       <AnchorPane prefHeight="400.0" prefWidth="800.0" BorderPane.alignment="CENTER">
          <children>
-            <TabPane prefHeight="404.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <TabPane onMouseExited="#Save" prefHeight="404.0" prefWidth="800.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <tabs>
                   <Tab text="Home">
                      <content>
                         <AnchorPane>
                            <children>
                               <Label layoutX="307.0" text="Welcome to Toy Store Company!" />
-                              <ListView fx:id="listToys" layoutX="254.0" layoutY="17.0" prefHeight="277.0" prefWidth="542.0" />
-                              <Button fx:id="buyButton" layoutX="500.0" layoutY="321.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="81.0" text="Buy" />
+                              <ListView fx:id="listToys" layoutX="254.0" layoutY="17.0" onEditStart="#showToys" prefHeight="277.0" prefWidth="542.0" />
+                              <Button fx:id="buyButton" layoutX="500.0" layoutY="321.0" mnemonicParsing="false" onAction="#buyToy" prefHeight="25.0" prefWidth="81.0" text="Buy" />
                               <Label layoutX="2.0" layoutY="27.0" text="Search Inventory:" />
-                              <RadioButton fx:id="searchBySN" layoutX="37.0" layoutY="56.0" mnemonicParsing="false" text="Serial Number">
+                              <RadioButton fx:id="searchSNButton" layoutX="37.0" layoutY="56.0" mnemonicParsing="false" text="Serial Number">
                                  <toggleGroup>
                                     <ToggleGroup fx:id="group" />
                                  </toggleGroup>
                               </RadioButton>
-                              <RadioButton fx:id="searchByName" layoutX="37.0" layoutY="82.0" mnemonicParsing="false" text="Name" toggleGroup="$group" />
-                              <RadioButton fx:id="searchByType" layoutX="37.0" layoutY="106.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="53.0" text="Type" toggleGroup="$group" />
+                              <RadioButton fx:id="searchNameButton" layoutX="37.0" layoutY="82.0" mnemonicParsing="false" text="Name" toggleGroup="$group" />
+                              <RadioButton fx:id="searchTypeButton" layoutX="37.0" layoutY="106.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="53.0" text="Type" toggleGroup="$group" />
                               <TextField fx:id="enterSN" layoutX="146.0" layoutY="143.0" prefHeight="25.0" prefWidth="99.0" promptText="Enter SN Here..." />
                               <Label layoutX="24.0" layoutY="147.0" text="Serial Number (SN)" />
                               <Label layoutX="24.0" layoutY="187.0" text="Name" />
-                              <Label layoutX="24.0" layoutY="230.0" text="Type" />
+                              <Label layoutX="24.0" layoutY="230.0" prefHeight="17.0" prefWidth="33.0" text="Type" textOverrun="CLIP" />
                               <TextField fx:id="enterName" layoutX="146.0" layoutY="192.0" prefHeight="25.0" prefWidth="100.0" promptText="Enter Name Here..." />
                               <TextField fx:id="enterType" layoutX="146.0" layoutY="239.0" prefHeight="25.0" prefWidth="100.0" promptText="Enter Type Here..." />
-                              <Button fx:id="searchButton" layoutX="37.0" layoutY="321.0" mnemonicParsing="false" text="Search" />
-                              <Button fx:id="clearButton" layoutX="170.0" layoutY="321.0" mnemonicParsing="false" text="Clear" />
+                              <Button fx:id="searchButton" layoutX="37.0" layoutY="321.0" mnemonicParsing="false" onAction="#searchToys" text="Search" />
+                              <Button fx:id="clearButton" layoutX="170.0" layoutY="321.0" mnemonicParsing="false" onAction="#clearToys" text="Clear" />
+                              <Label fx:id="buyID" layoutX="254.0" layoutY="304.0" prefHeight="17.0" prefWidth="512.0" />
                            </children>
                         </AnchorPane>
                      </content>

@@ -1,1 +1,2 @@
-# Assignment-3-Prog2
+# Assignment 3
+# Daniel Reh, Dominic Castor, Sean Gromek
