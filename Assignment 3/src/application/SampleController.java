@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import controller.ToyManager;
+import exceptions.NegativePriceException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -98,6 +99,8 @@ public class SampleController implements Initializable{
     private TextField addSN;
     @FXML
     private TextField addSize;
+    @FXML
+    private Label errorLabel;
     //Action event Listeners:
     
     /**
@@ -222,6 +225,15 @@ public class SampleController implements Initializable{
     	String Designer = addDesigner.getText();
     	String Players = Minimum + "-" + Maximum;
     	//Determine toy type selected
+    	
+    	if(Price < 0) {
+            try {
+                throw new NegativePriceException();
+            } catch (NegativePriceException e) {
+                errorLabel.setText(e.getMessage());
+            }
+		}
+
     	String ToyType = categoryComboBox.getValue();	
     	if(ToyType.equals("Animal")) {
     		Animals toyAdded = new Animals(SN, Name, Brand, Price, Count, Age, Material, Size);

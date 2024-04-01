@@ -84,6 +84,7 @@
                               <Label layoutX="448.0" layoutY="281.0" text="Maximum players:" />
                               <Label layoutX="482.0" layoutY="324.0" text="Designers:" />
                               <Button fx:id="addToyButton" layoutX="94.0" layoutY="329.0" mnemonicParsing="false" onAction="#addToy" text="Add Toy" />
+                              <Label fx:id="errorLabel" layoutX="12.0" layoutY="42.0" text="*" />
                            </children></AnchorPane>
                     </content>
                   </Tab>
