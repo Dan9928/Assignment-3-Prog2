@@ -1,17 +1,13 @@
 package application;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.Scanner;
 
-import javafx.application.Platform;
+import controller.ToyManager;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -22,7 +18,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.WindowEvent;
+
 import model.Animals;
 import model.Boardgames;
 import model.Figures;
@@ -30,59 +26,13 @@ import model.Puzzles;
 import model.Toy;
 
 public class SampleController implements Initializable{
-	ArrayList<Toy> toys;
-	private final String FILE_PATH = "res/toys.txt";
+	
+	private ToyManager toysManager;
 	
     public SampleController() throws Exception {
-		toys = new ArrayList<>();
-		loadToys();
+    	toysManager = new ToyManager();
     }
-    
-    private void loadToys() throws Exception {
-	    File db = new File(FILE_PATH);
-	    
-	    if (db.exists()) {
-	        Scanner fileReader = new Scanner(db);
-	        while (fileReader.hasNextLine()) {
-	            String currentLine = fileReader.nextLine();
-	            String[] splittedLine = currentLine.split(";");
-	            String sn = splittedLine[0];
-	            String name = splittedLine[1];
-	            String brand = splittedLine[2];
-	            double price = Double.parseDouble(splittedLine[3]);
-	            int count = Integer.parseInt(splittedLine[4]);
-	            int age = Integer.parseInt(splittedLine[5]);
-	          
-	            Toy product;
-	            if (sn.startsWith("0") || sn.startsWith("1")) { // Figures
-                    String figClass = splittedLine[6];
-                    product = new Figures(sn, name, brand, price, count, age, figClass);
-                    toys.add(product);
-                } 
-	            if (sn.startsWith("2") || sn.startsWith("3")) { // Animals
-                    String material = splittedLine[6];
-                    String size = splittedLine[7];
-                    product = new Animals(sn, name, brand, price, count, age, material, size);
-                    toys.add(product);
-                }
-	            if (sn.startsWith("4") || sn.startsWith("5") || sn.startsWith("6")) { // Puzzles
-                    String puzzleType = splittedLine[6];
-                    product = new Puzzles(sn, name, brand, price, count, age, puzzleType);
-                    toys.add(product);
-                }
-	            if (sn.startsWith("7") || sn.startsWith("8") || sn.startsWith("9")) { // Board Games
-                    String numOfPlayers = splittedLine[6];
-                    String designer = splittedLine[7];
-                    product = new Boardgames(sn, name, brand, price, count, age, numOfPlayers, designer);
-                    toys.add(product);
-                }
-	        }
-	        fileReader.close();
-	    }
-	}
-	
-
-	
+    	
     @FXML
     private Button buyButton;
     
@@ -120,19 +70,71 @@ public class SampleController implements Initializable{
     private RadioButton searchTypeButton;
     
     @FXML
-    private ComboBox<String> categoryComboBox = new ComboBox<>();
+    private ComboBox<String> categoryComboBox;
     
+    @FXML
+    private Button removeToyButton;
+    
+    @FXML
+    private Button addToyButton;
 
     @FXML
+    private TextField deleteBySN;
+    
+    @FXML
+    private ListView<String> deleteToysList;
+    
+    @FXML
+    private TextField addType;
+    
+    @FXML
+    private TextField addAge;
+
+    @FXML
+    private TextField addBrand;
+
+    @FXML
+    private TextField addClass;
+
+    @FXML
+    private TextField addCount;
+
+    @FXML
+    private TextField addDesigner;
+
+    @FXML
+    private TextField addMaterial;
+
+    @FXML
+    private TextField addMaximum;
+
+    @FXML
+    private TextField addMinimum;
+
+    @FXML
+    private TextField addName;
+
+    @FXML
+    private TextField addPrice;
+
+    @FXML
+    private TextField addSN;
+
+    @FXML
+    private TextField addSize;
+
+
+    
+    @FXML 
     void buyToy(ActionEvent event) throws IOException {
         String userItem = listToys.getSelectionModel().getSelectedItem();
         boolean itemFound = false;
         
-        for (Toy toy : toys) {
+        for (Toy toy : toysManager.getToysList()) {
             if (toy.toString().equals(userItem)) {
                 int count = toy.getCount();
                 if (count > 0) {
-                    toy.setCount(count - 1);
+                	toysManager.buyToy(toy, count);;
                     buyID.setText("The Transaction Successfully Terminated!");
                     itemFound = true;
                     int index = listToys.getSelectionModel().getSelectedIndex();
@@ -143,26 +145,24 @@ public class SampleController implements Initializable{
                 break;
             }
         }
-        
         if (!itemFound) {
             buyID.setText("Out of stock!");
         }
     }
-
     @FXML
     void clearToys(ActionEvent event) {
     	buyID.setText("");
+    	if (searchNameButton.isSelected()||searchSNButton.isSelected()||searchTypeButton.isSelected()) {
     	group.getSelectedToggle().setSelected(false);
+    	}
     	listToys.getItems().clear();
     	enterName.clear();
     	enterSN.clear();
     	enterType.clear();
-        for (Toy toy : toys) {
+        for (Toy toy : toysManager.getToysList()) {
             listToys.getItems().addAll(toy.toString());
         }
     }
-
-
     @FXML
     void searchToys(ActionEvent event) {
     	String name = enterName.getText();
@@ -170,21 +170,21 @@ public class SampleController implements Initializable{
     	String SN = enterSN.getText();
     	listToys.getItems().clear();
         if (searchNameButton.isSelected()) {
-			for(Toy toy : toys) {
+			for(Toy toy : toysManager.getToysList()) {
 				 if(toy.getName().toLowerCase().contains(name.toLowerCase())) {
 			            listToys.getItems().add(toy.toString());
 			        }
 			}
     	}
         if(searchSNButton.isSelected()) {
-			for(Toy toy : toys) {
+			for(Toy toy : toysManager.getToysList()) {
 				if(toy.getSn().equals(SN)) {
 					listToys.getItems().add(toy.toString());
 				}
 			}
         }
         if(searchTypeButton.isSelected()) {
-    		for (Toy toys : toys) {
+    		for (Toy toys : toysManager.getToysList()) {
     	        if (toys instanceof Animals && type.toLowerCase().equalsIgnoreCase("animal")) {
     	        	listToys.getItems().add(toys.toString());
     	        } 
@@ -199,9 +199,46 @@ public class SampleController implements Initializable{
     	        }
     	    }	
         }
-
     }
-
+    @FXML
+	void addToy(ActionEvent event) throws Exception {
+    	
+    	String SN = addSN.getText();
+    	String Name = addName.getText();
+    	String Brand = addBrand.getText();	
+    	double Price = Double.parseDouble(addPrice.getText());	
+    	int Count = Integer.parseInt(addCount.getText());	
+    	int Age = Integer.parseInt(addAge.getText());
+    	String Class = addClass.getText();
+    	String Type = addType.getText();
+    	String Material = addMaterial.getText();
+    	String Size = addSize.getText();
+    	String Minimum = addMinimum.getText();
+    	String Maximum = addMaximum.getText();
+    	String Designer = addDesigner.getText();
+    	String Players = Minimum + "-" + Maximum;
+    	
+    	
+    	String ToyType = categoryComboBox.getValue();
+    		
+    	if(ToyType.equals("Animal")) {
+    		Animals toyAdded = new Animals(SN, Name, Brand, Price, Count, Age, Material, Size);
+    		toysManager.addToy(toyAdded);
+    	}
+    	if(ToyType.equals("Puzzle")) {
+    		Puzzles toyAdded = new Puzzles(SN, Name, Brand, Price, Count, Age, Class);
+    		toysManager.addToy(toyAdded);
+    	}
+    	if(ToyType.equals("Figure")) {
+    		Figures toyAdded = new Figures(SN, Name, Brand, Price, Count, Age, Type);
+    		toysManager.addToy(toyAdded);
+    	}
+    	if(ToyType.equals("Boardgame")) {
+    		Boardgames toyAdded = new Boardgames(SN, Name, Brand, Price, Count, Age, Players, Designer);
+    		toysManager.addToy(toyAdded);
+    	}
+	
+	}
     @FXML
     void showToys(ActionEvent event) {
     	
@@ -209,23 +246,33 @@ public class SampleController implements Initializable{
     
     @FXML
     private void Save(MouseEvent event) throws IOException {
-    	PrintWriter pw = new PrintWriter(new FileWriter(FILE_PATH), true);
-            for (Toy toy : toys) {
-            	pw.println(toy.format());
-            }
-            pw.close();
+    	toysManager.saveToFile(toysManager.getToysList());
     }
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-            for (Toy toy : toys) {
+            for (Toy toy : toysManager.getToysList()) {
                 listToys.getItems().addAll(toy.toString());
-            }
-            
+                
+            }       
             categoryComboBox.setEditable(false);
-            categoryComboBox.getItems().addAll("Animal", "Puzzle", "Figure", "Boardgame");
-         
+            categoryComboBox.getItems().addAll("Animal", "Puzzle", "Figure", "Boardgame");   
 	}
 	
+	@FXML
+	void removeToy(ActionEvent event) {
+		
+		String deleteSN = deleteBySN.getText();
+		ArrayList<Toy> toysList = toysManager.getToysList();
+		
+		for(Toy toy : toysList) {
+			if(toy.getSn().equals(deleteSN)) {
+				deleteToysList.getItems().add(toy.toString());
+				toysManager.RemoveToy(toy);
+				break;
+			}
+		}
+	}
 
+	
 }

@@ -15,14 +15,13 @@ import model.Puzzles;
 import model.Toy;
 
 public class ToyManager {
-    private ArrayList<Toy> toys;
+    private ArrayList<Toy> inventoryToys;
     private final String FILE_PATH = "res/toys.txt";
 
     public ToyManager() throws Exception {
-        toys = new ArrayList<>();
+    	inventoryToys = new ArrayList<>();
         loadToys();
     }
-    
     private void loadToys() throws Exception {
 	    File db = new File(FILE_PATH);
 	    
@@ -42,47 +41,62 @@ public class ToyManager {
 	            if (sn.startsWith("0") || sn.startsWith("1")) { // Figures
                     String figClass = splittedLine[6];
                     product = new Figures(sn, name, brand, price, count, age, figClass);
-                    toys.add(product);
+                    inventoryToys.add(product);
                 } 
 	            if (sn.startsWith("2") || sn.startsWith("3")) { // Animals
                     String material = splittedLine[6];
                     String size = splittedLine[7];
                     product = new Animals(sn, name, brand, price, count, age, material, size);
-                    toys.add(product);
+                    inventoryToys.add(product);
                 }
 	            if (sn.startsWith("4") || sn.startsWith("5") || sn.startsWith("6")) { // Puzzles
                     String puzzleType = splittedLine[6];
                     product = new Puzzles(sn, name, brand, price, count, age, puzzleType);
-                    toys.add(product);
+                    inventoryToys.add(product);
                 }
 	            if (sn.startsWith("7") || sn.startsWith("8") || sn.startsWith("9")) { // Board Games
                     String numOfPlayers = splittedLine[6];
                     String designer = splittedLine[7];
                     product = new Boardgames(sn, name, brand, price, count, age, numOfPlayers, designer);
-                    toys.add(product);
+                    inventoryToys.add(product);
                 }
 	        }
 	        fileReader.close();
 	    }
 	}
     
-    public boolean buyToy(String userItem) {
-        for (Toy toy : toys) {
-            if (toy.toString().equals(userItem)) {
-                int count = toy.getCount();
-                if (count > 0) {
-                    toy.setCount(count - 1);
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
-        return false;
+    public ArrayList<Toy> getToysList(){
+    	return inventoryToys;
     }
-
+    
+    public void saveToFile(ArrayList<Toy> savingToysList) throws IOException {
+        PrintWriter pw = new PrintWriter(new FileWriter(FILE_PATH), true);
+        for (Toy toy : inventoryToys) {
+            pw.println(toy.format());
+        }
+        pw.close();
+    }
+    
+    public void RemoveToy(Toy input) {
+    	inventoryToys.remove(input);
+    }
+    
+    public void buyToy(Toy input, int count) {
+        input.setCount(count - 1);
+    }
+    public void addToy(Toy input) {
+    	inventoryToys.add(input);
+    }
+    
+    
+    
+    
+    
+    
+  
+    
     public void searchByName(String name, ListView<String> listView) {
-        for (Toy toy : toys) {
+        for (Toy toy : inventoryToys) {
             if (toy.getName().toLowerCase().contains(name.toLowerCase())) {
                 listView.getItems().add(toy.toString());
             }
@@ -90,7 +104,7 @@ public class ToyManager {
     }
 
     public void searchBySN(String SN, ListView<String> listView) {
-        for (Toy toy : toys) {
+        for (Toy toy : inventoryToys) {
             if (toy.getSn().equals(SN)) {
                 listView.getItems().add(toy.toString());
             }
@@ -98,7 +112,7 @@ public class ToyManager {
     }
 
     public void searchByType(String type, ListView<String> listView) {
-        for (Toy toy : toys) {
+        for (Toy toy : inventoryToys) {
             if (toy instanceof Animals && type.equalsIgnoreCase("animal")) {
                 listView.getItems().add(toy.toString());
             } else if (toy instanceof Figures && type.equalsIgnoreCase("figure")) {
@@ -109,13 +123,5 @@ public class ToyManager {
                 listView.getItems().add(toy.toString());
             }
         }
-    }
-
-    public void saveToFile() throws IOException {
-        PrintWriter pw = new PrintWriter(new FileWriter(FILE_PATH), true);
-        for (Toy toy : toys) {
-            pw.println(toy.format());
-        }
-        pw.close();
     }
 }
