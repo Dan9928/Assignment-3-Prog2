@@ -268,18 +268,16 @@ public class SampleController implements Initializable{
             categoryComboBox.getItems().addAll("Animal", "Puzzle", "Figure", "Boardgame");   
 	}
 	/**
-	    * Initialize list view and combo boxes
+	    * Removes toy from inventory
 	    *
-	    * @param arg0  the string to display.  If the text is null, 
-	    *        
-	    * @param arg1 Local objects needed for rendering.
+	    * @param event Remove toy button being pressed. When pressed the toy with the matching SN entered is removed.  
 	    */
 	@FXML
 	void removeToy(ActionEvent event) {
-		
+		//Initialize collected text and toy list.
 		String deleteSN = deleteBySN.getText();
 		ArrayList<Toy> toysList = toysManager.getToysList();
-		
+		//Find matching toy and delete
 		for(Toy toy : toysList) {
 			if(toy.getSn().equals(deleteSN)) {
 				deleteToysList.getItems().add(toy.toString());
@@ -287,7 +285,5 @@ public class SampleController implements Initializable{
 				break;
 			}
 		}
-	}
-
-	
+	}	
 }
