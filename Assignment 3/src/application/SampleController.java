@@ -253,12 +253,16 @@ public class SampleController implements Initializable{
 		errorLabel.setText(e.getMessage());
     	}
     }
-    public static boolean basicAddValidator(String SN, String Name, String Brand, double Price, int Count, int Age) throws InvalidSinLength{
+    public static boolean basicAddValidator(String SN, String Name, String Brand, double Price, int Count, int Age) throws InvalidSinLength, NegativePriceException{
     	boolean validFlag = true;
     	
     	if(SN.length()!= 10) {
     		validFlag = false;
     		throw new InvalidSinLength();
+    	}
+    	if(Price < 0) {
+    		validFlag = false;
+    		throw new NegativePriceException();
     	}
     	return validFlag;
     }
