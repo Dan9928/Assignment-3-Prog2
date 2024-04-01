@@ -24,7 +24,10 @@ import model.Boardgames;
 import model.Figures;
 import model.Puzzles;
 import model.Toy;
-
+/**
+ * The Sample controller class controls the view portion of the programming, housing the JavaFX portion of the project.
+ * 
+ */
 public class SampleController implements Initializable{
 	//Initializes ToyManager
 	private ToyManager toysManager;
@@ -250,7 +253,7 @@ public class SampleController implements Initializable{
     */
     @FXML
     private void Save(MouseEvent event) throws IOException {
-    	toysManager.saveToFile(toysManager.getToysList());
+    	toysManager.saveToFile();
     }
     /**
     * Initialize list view and combo boxes

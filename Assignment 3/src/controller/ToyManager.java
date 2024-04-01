@@ -13,18 +13,29 @@ import model.Boardgames;
 import model.Figures;
 import model.Puzzles;
 import model.Toy;
-
+/**
+ * Toy Manager class, keeps track of the story inventory as an object for reference in the code.
+ * Contains all appropriate accessors for Toys ArrayList.
+ */
 public class ToyManager {
-    private ArrayList<Toy> inventoryToys;
+    //Initialize ArrayList and File_path
+	private ArrayList<Toy> inventoryToys;
     private final String FILE_PATH = "res/toys.txt";
-
+    /**
+     * Constructor method that loads inventory.
+     */
     public ToyManager() throws Exception {
     	inventoryToys = new ArrayList<>();
         loadToys();
     }
+    /**
+     * Load Toys method.
+     * Loads database into ArrayList for use in store.
+     */
     private void loadToys() throws Exception {
-	    File db = new File(FILE_PATH);
-	    
+	    //Initialize file
+    	File db = new File(FILE_PATH);
+	    //Add toys to ArrayList
 	    if (db.exists()) {
 	        Scanner fileReader = new Scanner(db);
 	        while (fileReader.hasNextLine()) {
@@ -36,7 +47,7 @@ public class ToyManager {
 	            double price = Double.parseDouble(splittedLine[3]);
 	            int count = Integer.parseInt(splittedLine[4]);
 	            int age = Integer.parseInt(splittedLine[5]);
-	          
+	            //Sorting toy types
 	            Toy product;
 	            if (sn.startsWith("0") || sn.startsWith("1")) { // Figures
                     String figClass = splittedLine[6];
@@ -64,64 +75,45 @@ public class ToyManager {
 	        fileReader.close();
 	    }
 	}
-    
+    /**
+     * Method for retrieving array list.
+     *
+     * @return inventoryToys The stores up to date inventory
+     */
     public ArrayList<Toy> getToysList(){
     	return inventoryToys;
     }
-    
-    public void saveToFile(ArrayList<Toy> savingToysList) throws IOException {
+    /**
+     * Saves inventory to file
+     */
+    public void saveToFile() throws IOException {
         PrintWriter pw = new PrintWriter(new FileWriter(FILE_PATH), true);
         for (Toy toy : inventoryToys) {
             pw.println(toy.format());
         }
         pw.close();
     }
-    
+    /**
+     * Removes toy method, removes toy from the store inventory
+     * @param input  toy to be removed.
+     */
     public void RemoveToy(Toy input) {
     	inventoryToys.remove(input);
     }
-    
+    /**
+     * Buys the selected toy, reducing count by one
+     * 
+     * @param input toy being bought
+     */
     public void buyToy(Toy input, int count) {
         input.setCount(count - 1);
     }
+    /**
+     * Adds a new toy to the inventory
+     *
+     * @param input toy being added
+     */
     public void addToy(Toy input) {
     	inventoryToys.add(input);
-    }
-    
-    
-    
-    
-    
-    
-  
-    
-    public void searchByName(String name, ListView<String> listView) {
-        for (Toy toy : inventoryToys) {
-            if (toy.getName().toLowerCase().contains(name.toLowerCase())) {
-                listView.getItems().add(toy.toString());
-            }
-        }
-    }
-
-    public void searchBySN(String SN, ListView<String> listView) {
-        for (Toy toy : inventoryToys) {
-            if (toy.getSn().equals(SN)) {
-                listView.getItems().add(toy.toString());
-            }
-        }
-    }
-
-    public void searchByType(String type, ListView<String> listView) {
-        for (Toy toy : inventoryToys) {
-            if (toy instanceof Animals && type.equalsIgnoreCase("animal")) {
-                listView.getItems().add(toy.toString());
-            } else if (toy instanceof Figures && type.equalsIgnoreCase("figure")) {
-                listView.getItems().add(toy.toString());
-            } else if (toy instanceof Puzzles && type.equalsIgnoreCase("puzzle")) {
-                listView.getItems().add(toy.toString());
-            } else if (toy instanceof Boardgames && type.equalsIgnoreCase("boardgame")) {
-                listView.getItems().add(toy.toString());
-            }
-        }
     }
 }
