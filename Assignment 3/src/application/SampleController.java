@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import controller.ToyManager;
+import exceptions.InvalidSinLength;
 import exceptions.NegativePriceException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -210,7 +211,8 @@ public class SampleController implements Initializable{
     @FXML
 	void addToy(ActionEvent event) throws Exception {
     	//Gather info from fields
-    	String SN = addSN.getText();
+    	try {
+    	String SN = addSN.getText();    	
     	String Name = addName.getText();
     	String Brand = addBrand.getText();	
     	double Price = Double.parseDouble(addPrice.getText());	
@@ -224,16 +226,10 @@ public class SampleController implements Initializable{
     	String Maximum = addMaximum.getText();
     	String Designer = addDesigner.getText();
     	String Players = Minimum + "-" + Maximum;
-    	//Determine toy type selected
     	
-    	if(Price < 0) {
-            try {
-                throw new NegativePriceException();
-            } catch (NegativePriceException e) {
-                errorLabel.setText(e.getMessage());
-            }
-		}
-
+    	basicAddValidator(SN, Name, Brand, Price, Count, Age);
+    	
+    	//Determine toy type selected
     	String ToyType = categoryComboBox.getValue();	
     	if(ToyType.equals("Animal")) {
     		Animals toyAdded = new Animals(SN, Name, Brand, Price, Count, Age, Material, Size);
@@ -251,7 +247,21 @@ public class SampleController implements Initializable{
     		Boardgames toyAdded = new Boardgames(SN, Name, Brand, Price, Count, Age, Players, Designer);
     		toysManager.addToy(toyAdded);
     	}
-	}
+    	
+    	
+    	}catch(Exception e){
+		errorLabel.setText(e.getMessage());
+    	}
+    }
+    public static boolean basicAddValidator(String SN, String Name, String Brand, double Price, int Count, int Age) throws InvalidSinLength{
+    	boolean validFlag = true;
+    	
+    	if(SN.length()!= 10) {
+    		validFlag = false;
+    		throw new InvalidSinLength();
+    	}
+    	return validFlag;
+    }
     /**
     * Shows toys list in list view
     */
