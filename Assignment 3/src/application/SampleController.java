@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
 
 import controller.ToyManager;
 import exceptions.InvalidSinLength;
-import exceptions.NegativePriceException;
+import exceptions.NegativeInputException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -212,22 +212,24 @@ public class SampleController implements Initializable{
 	void addToy(ActionEvent event) throws Exception {
     	//Gather info from fields
     	try {
-    	String SN = addSN.getText();    	
-    	String Name = addName.getText();
-    	String Brand = addBrand.getText();	
-    	double Price = Double.parseDouble(addPrice.getText());	
-    	int Count = Integer.parseInt(addCount.getText());	
-    	int Age = Integer.parseInt(addAge.getText());
-    	String Class = addClass.getText();
-    	String Type = addType.getText();
-    	String Material = addMaterial.getText();
-    	String Size = addSize.getText();
-    	String Minimum = addMinimum.getText();
-    	String Maximum = addMaximum.getText();
-    	String Designer = addDesigner.getText();
-    	String Players = Minimum + "-" + Maximum;
+    		String SN = addSN.getText();
+            String Name = addName.getText();
+            String Brand = addBrand.getText();
+            double Price = Double.parseDouble(addPrice.getText());
+            int Count = Integer.parseInt(addCount.getText());
+            int Age = Integer.parseInt(addAge.getText());
+            String Class = addClass.getText();
+            String Type = addType.getText();
+            String Material = addMaterial.getText();
+            String Size = addSize.getText();
+            String Minimum = addMinimum.getText();
+            int minimumPlayers = Integer.parseInt(Minimum);
+            String Maximum = addMaximum.getText();
+            int maximumPlayers = Integer.parseInt(Maximum);
+            String Designer = addDesigner.getText();
+            String Players = Minimum + "-" + Maximum;
     	
-    	basicAddValidator(SN, Name, Brand, Price, Count, Age);
+            basicAddValidator(SN, Name, Brand, Price, Count, Age, Material, Size, Class, Type, minimumPlayers, maximumPlayers, Designer);
     	
     	//Determine toy type selected
     	String ToyType = categoryComboBox.getValue();	
@@ -253,7 +255,7 @@ public class SampleController implements Initializable{
 		errorLabel.setText(e.getMessage());
     	}
     }
-    public static boolean basicAddValidator(String SN, String Name, String Brand, double Price, int Count, int Age) throws InvalidSinLength, NegativePriceException{
+    public static boolean basicAddValidator(String SN, String Name, String Brand, double Price, int Count, int Age, String Material, String Size, String Class, String Type, int minimumPlayers, int maximumPlayers, String Designer) throws InvalidSinLength, NegativeInputException{
     	boolean validFlag = true;
     	
     	if(SN.length()!= 10) {
@@ -262,8 +264,15 @@ public class SampleController implements Initializable{
     	}
     	if(Price < 0) {
     		validFlag = false;
-    		throw new NegativePriceException();
+    		throw new NegativeInputException();
     	}
+    	if(Count < 0) {
+    		validFlag = false;
+    		throw new NegativeInputException();
+    	}
+    
+    			
+    	
     	return validFlag;
     }
     /**
